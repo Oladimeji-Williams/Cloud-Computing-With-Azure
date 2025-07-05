@@ -1,0 +1,24 @@
+# Check scripts for Login into Azure
+az login --use-device-code
+
+# Create resource group
+az group create -l eastus2 -g 'techstylers-rg'
+
+# Create resource group with tag
+az group create --location 'eastus2' --name 'techstylers-rg' --tags environment= 'Production' project= 'Techstylers' owner= 'CHARIS' costModel= 'ReservedInstance'
+
+# Deploy the deploy-all.bicep file to a 'techstylers-rg' resource group
+az deployment group create -g 'techstylers-rg' -f .\deploy-all.bicep -c
+
+# List all your storage accounts
+az storage account list --query [].name -o table
+
+# Deploy storage.bicep file with variables and outputs to a RG
+az deployment group create -g 'techstylers-rg' -f .\storage.bicep
+
+# Clean-up resources without confirmation prompt
+az group delete --name 'techstylers-rg' --yes
+
+
+# how you deploy the pim.bicep
+az deployment group create --resource-group techstylers-rg --template-file pim.bicep --parameters principalId='34f83037-3ca6-49c1-bc35-e7a29ed5e27f'
